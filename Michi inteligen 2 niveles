@@ -1,4 +1,6 @@
+Juego clásico de tres en raya desarrollado con colab este parámetro significa que tendrá que colocar en un code diferente --->>> //////////////////////////////////////////////////////////////////////////////////
 
+this parameter means that you will have to put in a different code --->>> //////////////////////////////////////////////////////////////////////////////////
 
 !rm -rf aima-python/
 !rm -rf aima-data/
