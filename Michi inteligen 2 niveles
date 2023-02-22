@@ -1,0 +1,70 @@
+!rm -rf aima-python/
+!rm -rf aima-data/
+!git clone https://github.com/gobber/aima-python
+!pip -q install ipythonblocks
+!cd aima-python && git clone https://github.com/aimacode/aima-data
+!pip -q install pytest
+!cp aima-python/js/* /usr/local/share/jupyter/nbextensions/google.colab/
+//////////////////////////////////////////////////////////////////////////////////
+def import_non_local(name, custom_name=None):    
+    custom_name = custom_name or name
+    f, pathname, desc = imp.find_module(name, sys.path[1:])
+    module = imp.load_module(custom_name, f, pathname, desc)
+    f.close()
+    return module
+  
+import imp, sys
+from google.colab import output
+
+sys.path.append('/content/aima-python/')
+//////////////////////////////////////////////////////////////////////////////////
+noteb = import_non_local('/content/aima-python/notebook', 'noteb')
+games = import_non_local('/content/aima-python/games', 'games')
+import noteb as nb
+import games as gm
+//////////////////////////////////////////////////////////////////////////////////
+juego_raya = gm.TicTacToe()
+juego_raya.display(juego_raya.initial)
+//////////////////////////////////////////////////////////////////////////////////
+tabulero = gm.GameState(
+    to_move = 'X',
+    utility = '0',
+    board = {
+             (1,1): 'X', (1,2): 'O', (1,3): 'X',
+             (2,1): 'O',             (2,3): 'O',
+             (3,1): 'X',
+             },
+    moves = [(2,2), (3,2), (3,3)]
+)
+juego_raya.display(tabulero)
+//////////////////////////////////////////////////////////////////////////////////
+jugada = gm.minimax_decision(tabulero, juego_raya)
+board = tabulero.board
+board[jugada] = 'O'
+juego_raya.display(tabulero)
+
+//////////////////////////////////////////////////////////////////////////////////
+print('==================================')
+for _ in range(10):
+    print('tabulero: ')
+    game_result = juego_raya.play_game(gm.random_player, gm.alphabeta_player)
+    print('Resultado: ', 'jugador random a vencer' if game_result == 1 else 'raya' if game_result == 0 else 'Alpha beta vencer' )
+    print('==================================')
+    
+//////////////////////////////////////////////////////////////////////////////////
+    print('==================================')
+for _ in range(10):
+    print('Tabulero: ')
+    game_result = juego_raya.play_game(gm.alphabeta_player, gm.alphabeta_player)
+    print('Resultado: ', 'Jugador alpha 1 a vencer' if game_result == 1 else 'raya' if game_result == 0 else 'Jugador alpha 2 a vencer' )
+    print('==================================')
+    
+///////////////////////////////////////////////////////////////////////////////////
+    random_play = nb.Canvas_TicTacToe('random_play', 'human', 'random')
+output.register_callback('random_play.mouse_click', random_play.mouse_click)
+random_play.draw_board()
+
+//////////////////////////////////////////////////////////////////////////////////
+alpha_play = nb.Canvas_TicTacToe('alpha_play', 'human', 'alphabeta')
+output.register_callback('alpha_play.mouse_click', alpha_play.mouse_click)
+alpha_play.draw_board()
